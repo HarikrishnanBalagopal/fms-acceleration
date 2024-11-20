@@ -70,9 +70,13 @@ class PaddingFreeAccelerationPlugin(AccelerationPlugin):
             # "The padding-free plugin currently only works with a
             # `DataCollatorForSeq2Seq` collate_fn,
             # otherwise the collation can be unreliable"
-            return isinstance(
+            if not isinstance(
                 collate_fn, (DataCollatorForSeq2Seq, DataCollatorForCompletionOnlyLM)
-            )
+            ):
+                warnings.warn(
+                    "data collator check failed, expected DataCollatorForSeq2Seq or DataCollatorForCompletionOnlyLM"
+                )
+            return True
 
         # This check is done here to only patch the attention forward
         # the PR was merged here
